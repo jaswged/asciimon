@@ -3,7 +3,6 @@ use std::{
     error::Error,
     process::Command,
 };
-use std::cmp::Ordering;
 use rand::Rng;
 use crate::asciimon::Asciimon;
 use crate::state::State;
@@ -16,10 +15,9 @@ const TITLE: &str = r"_______ _______ _______ _____ _____ _______  _____  __   _
 |_____| |______ |         |     |   |  |  | |     | | \  |
 |     | ______| |_____  __|__ __|__ |  |  | |_____| |  \_|
 ";
-// const SPACING: &str = "                             ";
 
 fn print_title() {
-    print!("\x1B[2J");
+    // print!("\x1B[2J");
     println!("{}", TITLE);
 }
 

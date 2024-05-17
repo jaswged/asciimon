@@ -1,3 +1,4 @@
+use std::ops::RangeInclusive;
 use rand::Rng;
 
 #[derive(Debug)]
@@ -12,7 +13,7 @@ pub struct Asciimon{
     pub sprite_ln3: String,
     pub sprite_ln4: String,
     pub sprite_ln5: String,
-    // vec<Attacks> todo
+    pub attacks: Vec<Attack>,
 }
 
 impl Asciimon {
@@ -44,7 +45,9 @@ impl Asciimon{
         // println!("{}", sprite_ln5);
 
          // effectively 3d6 but not really. different distribution
-        let health = rand::thread_rng().gen_range(3..=18); 
+        let health = rand::thread_rng().gen_range(3..=18);
+        let mut attacks = Vec::new();
+        attacks.push(Attack{name: "Tackle".to_string(), damage_range: 1u8..=6u8});
 
         Asciimon{
             name,
@@ -58,7 +61,7 @@ impl Asciimon{
             sprite_ln3,
             sprite_ln4,
             sprite_ln5,
-
+            attacks
         }
     }
 
@@ -120,4 +123,10 @@ impl Asciimon{
             self.is_dead = true;
         }
     }
+}
+
+#[derive(Debug)]
+struct Attack{
+    name: String,
+    damage_range: RangeInclusive<u8>
 }
