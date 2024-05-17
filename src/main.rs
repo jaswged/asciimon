@@ -29,7 +29,7 @@ fn print_state(state: &State) {
         .expect("cls command failed to start")
         .wait()
         .expect("failed to wait");
-
+    println!("\n\n");
     Asciimon::print_battle(&state.contender, &state.opponent);
 
     let spaces_num = 35 - (state.contender.name.len());
@@ -79,22 +79,20 @@ fn main() {
     // Play the game
     loop {
         print_state(&state);
+
         // todo put attacks in own method
         // todo add initiative order per battle
-        // Magic numbers from below text length
-        let spacing1 = " ".repeat(25);
-        // let spacing2 = " ".repeat(20);
+        let attacks = &state.contender.attacks;
+        for i in (0..attacks.len()).step_by(2) {
+            let spacing = 35 - attacks.get(i).unwrap().name.len();
+            let spaces = " ".repeat(spacing - 5);
+            println!(" {}) {}{}{}){}", i + 1, attacks.get(i).unwrap().name, spaces, i+2, attacks.get(i+1).unwrap().name);
+        }
 
-        println!(" 1) Tackle{spacing1}2) Rock Throw");
-        // println!("1 turn cooldown{spacing2}2 turn cooldown");
-        let attack = get_input(format!("\nChoose which attack to use...\n"), 1u8..=2u8);
-        // todo need to map u8 to an "attack" enum?
-        let dmg = match attack {
-            1 => {rand::thread_rng().gen_range(3..=6)},
-            2 => {rand::thread_rng().gen_range(1..=5)},
-            _ => {1}
-        };
-        println!("Your attack is: {attack} which did {dmg} damage");
+        let atk_ind = get_input(format!("\nChoose which attack {} will use...\n", &state.contender.name), 1u8..=attacks.len() as u8 + 1) as usize;
+        let attack = attacks.get(atk_ind - 1).unwrap();
+        let dmg = rand::thread_rng().gen_range(attack.damage_range.clone());
+        println!("Your {} did {} damage", &attack.name, dmg);
         state.opponent.take_damage(dmg);
 
         if state.opponent.is_dead {

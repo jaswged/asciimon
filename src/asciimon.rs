@@ -34,25 +34,22 @@ impl Asciimon{
     pub fn new(name: String, sprite: String) -> Self{
         let mut it = sprite.lines();
         let sprite_ln1 = it.next().unwrap().to_string();
-        // println!("{}", sprite_ln1);
         let sprite_ln2 = it.next().unwrap().to_string();
-        // println!("{}", sprite_ln2);
         let sprite_ln3 = it.next().unwrap().to_string();
-        // println!("{}", sprite_ln3);
         let sprite_ln4 = it.next().unwrap().to_string();
-        // println!("{}", sprite_ln4);
         let sprite_ln5 = it.next().unwrap().to_string();
-        // println!("{}", sprite_ln5);
 
          // effectively 3d6 but not really. different distribution
         let health = rand::thread_rng().gen_range(3..=18);
         let mut attacks = Vec::new();
-        attacks.push(Attack{name: "Tackle".to_string(), damage_range: 1u8..=6u8});
+        attacks.push(Attack{name: "Tackle".to_string(), damage_range: 2..=6});
+        attacks.push(Attack{name: "Rock Throw".to_string(), damage_range: 1..=5});
+        attacks.push(Attack{name: "Cry".to_string(), damage_range: 0..=2});
+        attacks.push(Attack{name: "Pounce".to_string(), damage_range: 1..=5});
 
         Asciimon{
             name,
             sprite,
-            // sprite: r"muh sprite".to_string(),
             health,
             max_health: health,
             is_dead: false,
@@ -104,7 +101,6 @@ impl Asciimon{
     }
 
     pub fn health_pretty(&self) -> String {
-        // ToDo. Show health as a portion of max health
         let mut to_return = "#".repeat(self.health as usize);
         let remaining = self.max_health - self.health;
         if remaining != 0{
@@ -115,18 +111,16 @@ impl Asciimon{
     }
 
     pub fn take_damage(&mut self, amount: i32) {
-        // println!("Asciimon took {} damage", amount);
-        self.health -= amount; 
+        self.health -= amount;
         if self.health <= 0 {
             self.health = 0;
-            // todo set is_dead or trigger something
             self.is_dead = true;
         }
     }
 }
 
 #[derive(Debug)]
-struct Attack{
-    name: String,
-    damage_range: RangeInclusive<u8>
+pub struct Attack{
+    pub name: String,
+    pub damage_range: RangeInclusive<i32>
 }
