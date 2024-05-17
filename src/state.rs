@@ -1,16 +1,21 @@
 use crate::asciimon::Asciimon;
+use rand::Rng;
 
 #[derive(Debug)]
 pub struct State {
-    pub contender: Asciimon, 
-    pub opponent: Asciimon  // todo make a list of contenders.
-    // asciimons: Vec<Asciimon>
+    pub contender: Asciimon,
+    pub opponent: Asciimon,
+    pub opponents: Vec<Asciimon>,
+    // pub asciimons: Vec<Asciimon>
 }
 
 impl State{
-    fn new(contender: Asciimon, opponent: Asciimon) -> Self{
+    pub fn new(contender: Asciimon, mut opponents: Vec<Asciimon>) -> Self{
+        // Choose random opponent
+        let rand_opt = rand::thread_rng().gen_range(0..opponents.len());
+        let opponent = opponents.remove(rand_opt);
         State{
-            contender, opponent
+            contender, opponent, opponents
         }
     }
 }
